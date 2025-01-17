@@ -17,7 +17,9 @@ class RestaurantController extends GetxController {
       menus: Menus(foods: [], drinks: []),
       rating: 0.0,
       customerReviews: []).obs;
-  var isLoading = true.obs;
+  var isListLoading = true.obs;
+  var isDetailLoading = true.obs;
+
   var isError = false.obs;
   var errorMessage = "".obs;
   final ApiService apiService;
@@ -25,12 +27,13 @@ class RestaurantController extends GetxController {
 
   @override
   void onInit() {
+    super.onInit();
     fetchRestaurantList();
   }
 
   Future<void> fetchRestaurantList() async {
     try {
-      isLoading(true);
+      isListLoading(true);
       isError(false);
       var response = await apiService.getListRestaurant();
       if (response != null) {
@@ -43,13 +46,13 @@ class RestaurantController extends GetxController {
       isError(true);
       errorMessage.value = e.toString();
     } finally {
-      isLoading(false);
+      isListLoading(false);
     }
   }
 
   Future<void> fetchRestaurantDetail(String id) async {
     try {
-      isLoading(true);
+      isDetailLoading(true);
       isError(false);
       var response = await apiService.getDetailRestaurant(id);
       if (response != null) {
@@ -62,7 +65,7 @@ class RestaurantController extends GetxController {
       isError(true);
       errorMessage.value = e.toString();
     } finally {
-      isLoading(false);
+      isDetailLoading(false);
     }
   }
 }

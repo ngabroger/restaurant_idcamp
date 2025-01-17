@@ -13,14 +13,16 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final RestaurantController controller = Get.find<RestaurantController>();
-    controller.fetchRestaurantDetail(restaurantId);
+    if (controller.detailRestaurant.value?.id != restaurantId) {
+      controller.fetchRestaurantDetail(restaurantId);
+    }
     return Scaffold(
         appBar: AppBar(
           title: Text('Restaurant Detail'),
         ),
         body: Obx(
           () {
-            if (controller.isLoading.value) {
+            if (controller.isDetailLoading.value) {
               return Center(
                 child: CircularProgressIndicator(),
               );
