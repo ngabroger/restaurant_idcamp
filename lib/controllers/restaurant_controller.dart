@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 class RestaurantController extends GetxController {
   var restaurantList = <Restaurant>[].obs;
+  var searchResult = <Restaurant>[].obs;
 
   var detailRestaurant = DetailRestaurant(
       id: '',
@@ -19,6 +20,7 @@ class RestaurantController extends GetxController {
       customerReviews: []).obs;
   var isListLoading = true.obs;
   var isDetailLoading = true.obs;
+  var isSearchLoading = true.obs;
 
   var isError = false.obs;
   var errorMessage = "".obs;
@@ -66,6 +68,26 @@ class RestaurantController extends GetxController {
       errorMessage.value = e.toString();
     } finally {
       isDetailLoading(false);
+    }
+  }
+
+  Future<void> searchRestaurant(String query) async {
+    try {
+      isSearchLoading(true);
+      isError(false);
+      var response = await apiService.searchRestaurant(query);
+      if (response != null) {
+        searchResult.value = response.restaurants;
+      } else {
+        isError(true);
+        
+        errorMessage.value = "Failed to search restaurant";
+      }
+    } catch (e) {
+      isError(true);
+      errorMessage.value = e.toString();
+    } finally {
+      isSearchLoading(false);
     }
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:find_restaurant/data/model/detail_restaurant.dart';
 import 'package:find_restaurant/data/model/list_restaurant_response.dart';
+import 'package:find_restaurant/data/model/search_list_restaurant.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
@@ -20,10 +21,10 @@ class ApiService {
     }
   }
 
-  Future<RestaurantListResponse> searchRestaurant(String query) async {
+  Future<SearchListResponse> searchRestaurant(String query) async {
     final response = await http.get(Uri.parse("$baseUrl/$search$query"));
     if (response.statusCode == 200) {
-      return RestaurantListResponse.fromJson(jsonDecode(response.body));
+      return SearchListResponse.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to search restaurant');
     }
