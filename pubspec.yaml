@@ -38,6 +38,7 @@ dependencies:
   get: ^4.6.6
   http: ^1.2.2
   flutter_dash: ^1.0.0
+  readmore: ^3.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

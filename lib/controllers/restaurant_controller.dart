@@ -80,7 +80,7 @@ class RestaurantController extends GetxController {
         searchResult.value = response.restaurants;
       } else {
         isError(true);
-        
+
         errorMessage.value = "Failed to search restaurant";
       }
     } catch (e) {
@@ -88,6 +88,22 @@ class RestaurantController extends GetxController {
       errorMessage.value = e.toString();
     } finally {
       isSearchLoading(false);
+    }
+  }
+
+  Future<void> addReview(String id, String name, String review) async {
+    try {
+      isError(false);
+      var response = await apiService.postReview(id, name, review);
+      if (response != null) {
+        fetchRestaurantDetail(id);
+      } else {
+        isError(true);
+        errorMessage.value = "Failed to add review";
+      }
+    } catch (e) {
+      isError(true);
+      errorMessage.value = e.toString();
     }
   }
 }

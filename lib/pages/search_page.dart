@@ -1,8 +1,10 @@
 import 'package:find_restaurant/controllers/restaurant_controller.dart';
+import 'package:find_restaurant/data/model/restaurant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../routes/navigation_routes.dart';
+import '../widget/search_card.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -19,9 +21,6 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     controller.searchRestaurant('');
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search Page'),
-      ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -60,14 +59,15 @@ class _SearchPageState extends State<SearchPage> {
                       itemCount: controller.searchResult.length,
                       itemBuilder: (context, index) {
                         var restaurant = controller.searchResult[index];
-                        return ListTile(
-                          title: Text(restaurant.name),
-                          subtitle: Text(restaurant.city),
-                          onTap: () {
-                            Get.toNamed(NavigationRoutes.detailRoute.name,
-                                parameters: {'id': restaurant.id});
-                          },
-                        );
+                        return SearchCard(
+                            onTap: () {
+                              print(restaurant.id);
+                              Get.toNamed(NavigationRoutes.detailRoute.name,
+                                  parameters: {
+                                    'id': restaurant.id,
+                                  });
+                            },
+                            restaurant: restaurant);
                       });
                 }
               },

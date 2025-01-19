@@ -1,11 +1,15 @@
 import 'package:find_restaurant/controllers/recent_restaurant_controller.dart';
 import 'package:find_restaurant/controllers/restaurant_controller.dart';
 import 'package:find_restaurant/data/api/api_service.dart';
+import 'package:find_restaurant/data/model/restaurant.dart';
 import 'package:find_restaurant/routes/navigation_routes.dart';
 import 'package:find_restaurant/widget/recent_card_restaurant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:get/get.dart';
+
+import '../widget/favorite_card.dart';
+import '../widget/grid_restaurant.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,10 +22,8 @@ class HomePage extends StatelessWidget {
         Get.put(RecentRestaurantController());
     return Padding(
       padding: const EdgeInsets.all(12.0),
-      child: Column(
-        spacing: 12.0,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: ListView(
+        scrollDirection: Axis.vertical,
         children: [
           Row(
             spacing: 8.0,
@@ -38,6 +40,9 @@ class HomePage extends StatelessWidget {
                 ),
               )
             ],
+          ),
+          SizedBox(
+            height: 12.0,
           ),
           Row(
             spacing: 8.0,
@@ -70,7 +75,7 @@ class HomePage extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 8.0,
+            height: 12.0,
           ),
           Center(
             child: Dash(
@@ -99,7 +104,7 @@ class HomePage extends StatelessWidget {
 
                 if (recent == null) {
                   return Center(
-                    child: Text("NO Recent Data Found"),
+                    child: Text("No Recent Data Found"),
                   );
                 } else {
                   return RecentCard(
@@ -138,94 +143,64 @@ class HomePage extends StatelessWidget {
                     itemCount: favoriteRestaurant.length,
                     itemBuilder: (context, index) {
                       var restaurant = favoriteRestaurant[index];
-                      return GestureDetector(
+                      return FavoriteCard(
                           onTap: () {
                             recentController.addRecentRestaurant(restaurant);
                             Get.toNamed(NavigationRoutes.detailRoute.name,
                                 parameters: {'id': restaurant.id});
                           },
-                          child: Container(
-                            width: 200,
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              elevation: 5,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    child: Image.network(
-                                      'https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}',
-                                      width: double.infinity,
-                                      height: 104,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              restaurant.name,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.star,
-                                                  color: Colors.yellow,
-                                                ),
-                                                Text(
-                                                  restaurant.rating.toString(),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.location_on,
-                                          size: 14,
-                                          color: Colors.blue,
-                                        ),
-                                        Text(
-                                          restaurant.city,
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ));
+                          recentController: recentController,
+                          restaurant: restaurant);
                     },
                   ),
                 );
               }
             },
           ),
+          Text(
+            "List Restaurant",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          Obx(
+            () {
+              if (controller.isListLoading.value) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (controller.isError.value) {
+                return Center(
+                  child: Text(controller.errorMessage.value),
+                );
+              } else {
+                final restaurantList = controller.restaurantList;
+                if (restaurantList.isEmpty) {
+                  return Center(
+                    child: Text("No Data Found"),
+                  );
+                }
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  itemCount: restaurantList.length,
+                  itemBuilder: (context, index) {
+                    var restaurant = restaurantList[index];
+                    return GridRestaurant(
+                      restaurant: restaurant,
+                      onTap: () {
+                        recentController.addRecentRestaurant(restaurant);
+                        Get.toNamed(
+                          NavigationRoutes.detailRoute.name,
+                          parameters: {'id': restaurant.id},
+                        );
+                      },
+                    );
+                  },
+                );
+              }
+            },
+          )
         ],
       ),
     );

@@ -96,7 +96,7 @@ class RecentCard extends StatelessWidget {
         ),
         Positioned(
             top: 25,
-            right: -40,
+            right: -30,
             child: Padding(
               padding: const EdgeInsetsDirectional.only(end: 16.0),
               child: ClipRRect(
