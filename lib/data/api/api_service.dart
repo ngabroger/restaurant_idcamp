@@ -42,7 +42,7 @@ class ApiService {
   Future<RestaurantListResponse> postReview(
       String id, String name, String review) async {
     final response = await http.post(
-      Uri.parse("$baseUrl/$review"),
+      Uri.parse("$baseUrl/review"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
