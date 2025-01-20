@@ -1,13 +1,13 @@
 import 'package:find_restaurant/controllers/restaurant_search_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../controllers/restaurant_recent.dart';
+import '../controllers/restaurant_recent_provider.dart';
 import '../static/navigation_routes.dart';
 import '../static/restaurant_search_result_state.dart';
 import '../widget/search_card.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  const SearchPage({super.key});
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -55,7 +55,7 @@ class _SearchPageState extends State<SearchPage> {
                   return Center(
                     child: Text(message),
                   );
-                case RestaurantSearchResultStateLoading:
+                case RestaurantSearchResultStateLoading _:
                   return Center(
                     child: CircularProgressIndicator(),
                   );

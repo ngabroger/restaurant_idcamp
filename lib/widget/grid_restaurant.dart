@@ -46,7 +46,7 @@ class GridRestaurant extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(4),
+                            padding: const EdgeInsets.all(8),
                             child: Row(
                               children: [
                                 Icon(

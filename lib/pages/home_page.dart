@@ -1,5 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:find_restaurant/controllers/restaurant_list_provider.dart';
-import 'package:find_restaurant/controllers/restaurant_recent.dart';
+import 'package:find_restaurant/controllers/restaurant_recent_provider.dart';
 import 'package:find_restaurant/static/navigation_routes.dart';
 import 'package:find_restaurant/static/restaurant_list_result_state.dart';
 import 'package:find_restaurant/widget/recent_card_restaurant.dart';
@@ -11,7 +13,7 @@ import '../widget/favorite_card.dart';
 import '../widget/grid_restaurant.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -44,10 +46,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Text(
                 "Find Restaurant",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.headlineSmall,
               )
             ],
           ),
@@ -69,16 +68,22 @@ class _HomePageState extends State<HomePage> {
                     width: 40,
                     height: 40,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(Icons.error);
+                    },
                   ),
                 ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Welcome Back,"),
+                  Text(
+                    "Welcome Back,",
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   Text(
                     "Ambalabu",
-                    style: TextStyle(fontWeight: FontWeight.w500),
+                    style: Theme.of(context).textTheme.bodyMedium,
                   )
                 ],
               )
@@ -87,14 +92,17 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: 12.0,
           ),
-          Center(
-            child: Dash(
-              length: MediaQuery.of(context).size.width * 0.9,
-              dashLength: 10,
-              dashColor: Colors.grey,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Center(
+              child: Dash(
+                length: MediaQuery.of(context).size.width * 0.9,
+                dashLength: 10,
+                dashColor: Colors.grey,
+              ),
             ),
           ),
-          Center(child: Consumer<RestaurantRecentProvider>(
+          Consumer<RestaurantRecentProvider>(
             builder: (context, value, child) {
               final recent = value.recentRestaurant;
               if (recent == null) {
@@ -109,15 +117,28 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               } else {
-                return RecentCard(
-                  onTap: () => Navigator.pushNamed(
-                      context, NavigationRoutes.detailRoute.name,
-                      arguments: recent.id),
-                  recents: recent,
+                return Column(
+                  spacing: 8.0,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Recent Restaurant",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
+                    Center(
+                      child: RecentCard(
+                        onTap: () => Navigator.pushNamed(
+                            context, NavigationRoutes.detailRoute.name,
+                            arguments: recent.id),
+                        recents: recent,
+                      ),
+                    ),
+                  ],
                 );
               }
             },
-          )),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
             child: Text(
@@ -132,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
-                case RestaurantListResultStateData(restaurants: var data):
+                case RestaurantListResultStateData():
                   return SizedBox(
                     width: double.infinity,
                     height: 190,

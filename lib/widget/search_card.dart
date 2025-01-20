@@ -23,7 +23,7 @@ class SearchCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Container(
+                child: SizedBox(
                   width: 180,
                   height: 120,
                   child: Image.network(

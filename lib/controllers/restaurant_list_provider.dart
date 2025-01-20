@@ -35,7 +35,7 @@ class RestaurantListProvider extends ChangeNotifier {
             .toList();
       }
     } on Exception catch (e) {
-      _state = RestaurantListResultStateError(e.toString());
+      _state = RestaurantListResultStateError("No Internet Connection");
       notifyListeners();
     }
   }

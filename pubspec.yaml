@@ -36,8 +36,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   curved_labeled_navigation_bar: ^2.0.2
   http: ^1.2.2
+  switcher_button: ^0.0.4
+  google_fonts: ^6.2.1
   provider: ^6.1.2
-  get: ^4.6.6
   flutter_dash: ^1.0.0
   readmore: ^3.0.0
 dev_dependencies:

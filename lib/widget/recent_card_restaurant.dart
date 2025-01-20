@@ -1,7 +1,6 @@
 import 'package:find_restaurant/data/api/api_service.dart';
 import 'package:find_restaurant/data/model/restaurant.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class RecentCard extends StatelessWidget {
   final Restaurant recents;
@@ -21,7 +20,6 @@ class RecentCard extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: Card(
-            color: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),

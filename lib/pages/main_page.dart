@@ -6,7 +6,7 @@ import 'package:find_restaurant/pages/setting_page.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({super.key});
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -23,6 +23,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
+        color: Theme.of(context).primaryColor,
         items: [
           CurvedNavigationBarItem(
               child: Icon(

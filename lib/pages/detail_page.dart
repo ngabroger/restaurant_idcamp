@@ -5,7 +5,6 @@ import 'package:find_restaurant/controllers/restaurant_review_provider.dart';
 import 'package:find_restaurant/data/api/api_service.dart';
 import 'package:find_restaurant/static/restaurant_detail_result_state.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import '../widget/circle_button.dart';

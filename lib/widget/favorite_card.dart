@@ -17,7 +17,7 @@ class FavoriteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: onTap,
-        child: Container(
+        child: SizedBox(
           width: 200,
           child: Card(
             shape: RoundedRectangleBorder(
@@ -40,10 +40,10 @@ class FavoriteCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
+                SizedBox(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
+                    child: SizedBox(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
