@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../controllers/recent_restaurant_controller.dart';
+import '../data/api/api_service.dart';
 import '../data/model/restaurant.dart';
 
 class FavoriteCard extends StatelessWidget {
   const FavoriteCard({
     super.key,
-    required this.recentController,
     required this.restaurant,
     required this.onTap,
   });
 
-  final RecentRestaurantController recentController;
   final Restaurant restaurant;
   final Function() onTap;
 
@@ -32,11 +30,14 @@ class FavoriteCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12.0),
-                  child: Image.network(
-                    'https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}',
-                    width: double.infinity,
-                    height: 104,
-                    fit: BoxFit.cover,
+                  child: Hero(
+                    tag: restaurant.pictureId,
+                    child: Image.network(
+                      ApiService.images + restaurant.pictureId,
+                      width: double.infinity,
+                      height: 104,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 Container(

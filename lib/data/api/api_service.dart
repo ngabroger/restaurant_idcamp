@@ -2,15 +2,17 @@ import 'dart:convert';
 
 import 'package:find_restaurant/data/model/detail_restaurant.dart';
 import 'package:find_restaurant/data/model/list_restaurant_response.dart';
+import 'package:find_restaurant/data/model/review.dart';
 import 'package:find_restaurant/data/model/search_list_restaurant.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = 'https://restaurant-api.dicoding.dev/';
-  final String list = 'list';
-  final String detail = 'detail/';
-  final String search = 'search?q=';
-  final String review = 'review';
+  static const String baseUrl = 'https://restaurant-api.dicoding.dev/';
+  static const String list = 'list';
+  static const String detail = 'detail/';
+  static const String search = 'search?q=';
+  static const String images = '$baseUrl/images/medium/';
+  static const String review = 'review';
 
   Future<RestaurantListResponse> getListRestaurant() async {
     final response = await http.get(Uri.parse("$baseUrl/$list"));
@@ -39,7 +41,7 @@ class ApiService {
     }
   }
 
-  Future<RestaurantListResponse> postReview(
+  Future<ReviewListResponse> postReview(
       String id, String name, String review) async {
     final response = await http.post(
       Uri.parse("$baseUrl/review"),
@@ -52,10 +54,10 @@ class ApiService {
         'review': review,
       }),
     );
-    if (response.statusCode == 200) {
-      return RestaurantListResponse.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return ReviewListResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Failed to post review');
+      throw Exception('Failed to post review: ${response.statusCode}');
     }
   }
 }

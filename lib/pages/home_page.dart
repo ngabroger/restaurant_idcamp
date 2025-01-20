@@ -1,25 +1,35 @@
-import 'package:find_restaurant/controllers/recent_restaurant_controller.dart';
-import 'package:find_restaurant/controllers/restaurant_controller.dart';
-import 'package:find_restaurant/data/api/api_service.dart';
-import 'package:find_restaurant/data/model/restaurant.dart';
-import 'package:find_restaurant/routes/navigation_routes.dart';
+import 'package:find_restaurant/controllers/restaurant_list_provider.dart';
+import 'package:find_restaurant/controllers/restaurant_recent.dart';
+import 'package:find_restaurant/static/navigation_routes.dart';
+import 'package:find_restaurant/static/restaurant_list_result_state.dart';
 import 'package:find_restaurant/widget/recent_card_restaurant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../widget/favorite_card.dart';
 import '../widget/grid_restaurant.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<RestaurantListProvider>().fetchRestaurantList();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final RestaurantController controller =
-        Get.put(RestaurantController(apiService: ApiService()));
-    final RecentRestaurantController recentController =
-        Get.put(RecentRestaurantController());
+    final restaurantRecent = context.read<RestaurantRecentProvider>();
+    final restaurantList = context.read<RestaurantListProvider>();
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: ListView(
@@ -84,123 +94,121 @@ class HomePage extends StatelessWidget {
               dashColor: Colors.grey,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 12.0,
-              top: 12.0,
-            ),
-            child: Obx(() {
-              final recent = recentController.recentRestaurants.value;
-              return Text(
-                recent == null ? "" : "Recent Restaurant",
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-              );
-            }),
-          ),
-          Center(
-            child: Obx(
-              () {
-                final recent = recentController.recentRestaurants.value;
-
-                if (recent == null) {
-                  return Center(
-                    child: Text("No Recent Data Found"),
-                  );
-                } else {
-                  return RecentCard(
-                      onTap: () {
-                        Get.toNamed(NavigationRoutes.detailRoute.name,
-                            parameters: {'id': recent.id});
-                      },
-                      recents: recent);
-                }
-              },
-            ),
-          ),
-          Text(
-            "Favorites Restaurant",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-          ),
-          Obx(
-            () {
-              if (controller.isListLoading.value) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (controller.isError.value) {
-                return Center(
-                  child: Text(controller.errorMessage.value),
-                );
-              } else {
-                var favoriteRestaurant = controller.restaurantList
-                    .where((element) => element.rating > 4.7)
-                    .toList();
-                return SizedBox(
-                  width: double.infinity,
-                  height: 190,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: favoriteRestaurant.length,
-                    itemBuilder: (context, index) {
-                      var restaurant = favoriteRestaurant[index];
-                      return FavoriteCard(
-                          onTap: () {
-                            recentController.addRecentRestaurant(restaurant);
-                            Get.toNamed(NavigationRoutes.detailRoute.name,
-                                parameters: {'id': restaurant.id});
-                          },
-                          recentController: recentController,
-                          restaurant: restaurant);
-                    },
+          Center(child: Consumer<RestaurantRecentProvider>(
+            builder: (context, value, child) {
+              final recent = value.recentRestaurant;
+              if (recent == null) {
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Text(
+                      "Find Your Favorite Restaurant",
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                    ),
                   ),
                 );
-              }
-            },
-          ),
-          Text(
-            "List Restaurant",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          Obx(
-            () {
-              if (controller.isListLoading.value) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (controller.isError.value) {
-                return Center(
-                  child: Text(controller.errorMessage.value),
-                );
               } else {
-                final restaurantList = controller.restaurantList;
-                if (restaurantList.isEmpty) {
-                  return Center(
-                    child: Text("No Data Found"),
-                  );
-                }
-                return GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemCount: restaurantList.length,
-                  itemBuilder: (context, index) {
-                    var restaurant = restaurantList[index];
-                    return GridRestaurant(
-                      restaurant: restaurant,
-                      onTap: () {
-                        recentController.addRecentRestaurant(restaurant);
-                        Get.toNamed(
-                          NavigationRoutes.detailRoute.name,
-                          parameters: {'id': restaurant.id},
-                        );
-                      },
-                    );
-                  },
+                return RecentCard(
+                  onTap: () => Navigator.pushNamed(
+                      context, NavigationRoutes.detailRoute.name,
+                      arguments: recent.id),
+                  recents: recent,
                 );
               }
             },
-          )
+          )),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Text(
+              "Favorites Restaurant",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+            ),
+          ),
+          Consumer<RestaurantListProvider>(
+            builder: (context, value, child) {
+              switch (value.state) {
+                case RestaurantListResultStateLoading():
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                case RestaurantListResultStateData(restaurants: var data):
+                  return SizedBox(
+                    width: double.infinity,
+                    height: 190,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: restaurantList.favoriteRestarant.length,
+                      itemBuilder: (context, index) {
+                        var restaurant =
+                            restaurantList.favoriteRestarant[index];
+                        return FavoriteCard(
+                            onTap: () {
+                              restaurantRecent.addRecent(restaurant);
+                              Navigator.pushNamed(
+                                context,
+                                NavigationRoutes.detailRoute.name,
+                                arguments: restaurant.id,
+                              );
+                            },
+                            restaurant: restaurant);
+                      },
+                    ),
+                  );
+                case RestaurantListResultStateError(error: var message):
+                  return Center(
+                    child: Text(message),
+                  );
+                default:
+                  return const SizedBox();
+              }
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Text(
+              "List Restaurant",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+          ),
+          Consumer<RestaurantListProvider>(
+            builder: (context, value, child) {
+              switch (value.state) {
+                case RestaurantListResultStateLoading():
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                case RestaurantListResultStateData(restaurants: var data):
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2),
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      var restaurant = data[index];
+                      return GridRestaurant(
+                        restaurant: restaurant,
+                        onTap: () {
+                          restaurantRecent.addRecent(restaurant);
+                          Navigator.pushNamed(
+                            context,
+                            NavigationRoutes.detailRoute.name,
+                            arguments: restaurant.id,
+                          );
+                        },
+                      );
+                    },
+                  );
+                case RestaurantListResultStateError(error: var message):
+                  return Center(
+                    child: Text(message),
+                  );
+                default:
+                  return const SizedBox();
+              }
+            },
+          ),
         ],
       ),
     );

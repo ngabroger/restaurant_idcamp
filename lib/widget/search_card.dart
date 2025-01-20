@@ -1,3 +1,4 @@
+import 'package:find_restaurant/data/api/api_service.dart';
 import 'package:flutter/material.dart';
 
 import '../data/model/restaurant.dart';
@@ -26,7 +27,7 @@ class SearchCard extends StatelessWidget {
                   width: 180,
                   height: 120,
                   child: Image.network(
-                    'https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}',
+                    ApiService.images + restaurant.pictureId,
                     fit: BoxFit.cover,
                   ),
                 ),
