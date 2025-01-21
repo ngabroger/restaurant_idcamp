@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:find_restaurant/controllers/restaurant_list_provider.dart';
 import 'package:find_restaurant/controllers/restaurant_recent_provider.dart';
 import 'package:find_restaurant/static/navigation_routes.dart';

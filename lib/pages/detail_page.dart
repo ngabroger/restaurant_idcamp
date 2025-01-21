@@ -1,5 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
-
+import 'package:find_restaurant/controllers/favorite_provider.dart';
 import 'package:find_restaurant/controllers/restaurant_detail_provider.dart';
 import 'package:find_restaurant/controllers/restaurant_review_provider.dart';
 import 'package:find_restaurant/data/api/api_service.dart';
@@ -37,6 +36,8 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     final TextEditingController nameController = TextEditingController();
     final TextEditingController reviewController = TextEditingController();
+    final RestaurantDetailProvider detailController =
+        context.read<RestaurantDetailProvider>();
     final RestaurantReviewProvider controller =
         context.read<RestaurantReviewProvider>();
     return Scaffold(
@@ -55,7 +56,7 @@ class _DetailPageState extends State<DetailPage> {
                 return SingleChildScrollView(
                   child: Stack(
                     children: [
-                      Container(
+                      SizedBox(
                         width: double.infinity,
                         child: Stack(
                           children: [
@@ -78,17 +79,20 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                     onTap: () => Navigator.pop(context),
                                   ),
-                                  CircleButton(
-                                    iconImage: Icon(
-                                      isFavorite
-                                          ? Icons.favorite_border
-                                          : Icons.favorite,
-                                      color: Colors.grey[700],
-                                    ),
-                                    onTap: () {
-                                      setState(() {
-                                        isFavorite = !isFavorite;
-                                      });
+                                  Consumer<FavoriteProvider>(
+                                    builder: (context, value, child) {
+                                      isFavorite = value.isFavorite;
+                                      return CircleButton(
+                                        iconImage: Icon(
+                                          isFavorite
+                                              ? Icons.favorite_border
+                                              : Icons.favorite,
+                                          color: Colors.grey[700],
+                                        ),
+                                        onTap: () {
+                                          value.setFavorite(!isFavorite);
+                                        },
+                                      );
                                     },
                                   )
                                 ],
@@ -319,7 +323,10 @@ class _DetailPageState extends State<DetailPage> {
                                                         FontWeight.bold),
                                               ),
                                               SizedBox(height: 4),
-                                              Text(review.review),
+                                              Text(review.review,
+                                                  maxLines: 3,
+                                                  overflow:
+                                                      TextOverflow.ellipsis),
                                               SizedBox(height: 4),
                                               Text(
                                                 review.date,
@@ -387,6 +394,8 @@ class _DetailPageState extends State<DetailPage> {
                                 .addReview(widget.restaurantId,
                                     nameController.text, reviewController.text)
                                 .then((_) {
+                              detailController
+                                  .fetchDetailRestaurant(widget.restaurantId);
                               Navigator.pop(context);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

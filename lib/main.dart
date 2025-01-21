@@ -1,4 +1,6 @@
 import 'package:find_restaurant/controllers/dark_theme_provider.dart';
+import 'package:find_restaurant/controllers/favorite_provider.dart';
+import 'package:find_restaurant/controllers/page_provider.dart';
 import 'package:find_restaurant/controllers/restaurant_detail_provider.dart';
 import 'package:find_restaurant/controllers/restaurant_list_provider.dart';
 import 'package:find_restaurant/controllers/restaurant_recent_provider.dart';
@@ -18,6 +20,12 @@ void main() {
   runApp(MultiProvider(providers: [
     Provider(
       create: (context) => ApiService(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => FavoriteProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => PageProvider(),
     ),
     ChangeNotifierProvider(
       create: (context) => DarkThemeProvider(),

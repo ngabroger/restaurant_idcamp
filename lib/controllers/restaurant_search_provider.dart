@@ -22,7 +22,7 @@ class RestaurantSearchProvider extends ChangeNotifier {
       } else {
         _state = RestaurantSearchResultStateData(result.restaurants);
       }
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       _state = RestaurantSearchResultStateError("No Internet Connection");
     } finally {
       notifyListeners();
