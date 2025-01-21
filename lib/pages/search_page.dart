@@ -1,25 +1,32 @@
-import 'package:find_restaurant/controllers/restaurant_controller.dart';
-import 'package:find_restaurant/data/model/restaurant.dart';
+import 'package:find_restaurant/controllers/restaurant_search_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import '../routes/navigation_routes.dart';
+import 'package:provider/provider.dart';
+import '../controllers/restaurant_recent_provider.dart';
+import '../static/navigation_routes.dart';
+import '../static/restaurant_search_result_state.dart';
 import '../widget/search_card.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  const SearchPage({super.key});
 
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final RestaurantController controller = Get.find<RestaurantController>();
-  final TextEditingController searchController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<RestaurantSearchProvider>().fetchSearchRestaurant("");
+    });
+  }
 
+  final TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    controller.searchRestaurant('');
+    final searchRestaurant = context.read<RestaurantSearchProvider>();
+    final restaurantRecent = context.read<RestaurantRecentProvider>();
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -31,7 +38,8 @@ class _SearchPageState extends State<SearchPage> {
                 labelText: 'Search',
                 suffixIcon: IconButton(
                   onPressed: () {
-                    controller.searchRestaurant(searchController.text);
+                    searchRestaurant
+                        .fetchSearchRestaurant(searchController.text);
                   },
                   icon: Icon(Icons.search),
                 ),
@@ -40,38 +48,39 @@ class _SearchPageState extends State<SearchPage> {
             SizedBox(
               height: 16,
             ),
-            Expanded(child: Obx(
-              () {
-                if (controller.isSearchLoading.value) {
+            Expanded(child: Consumer<RestaurantSearchProvider>(
+                builder: (context, value, child) {
+              switch (value.state) {
+                case RestaurantSearchResultStateError(message: var message):
+                  return Center(
+                    child: Text(message),
+                  );
+                case RestaurantSearchResultStateLoading _:
                   return Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (controller.searchResult.isEmpty) {
-                  return Center(
-                    child: Text('No data'),
-                  );
-                } else if (controller.isError.value) {
-                  return Center(
-                    child: Text(controller.errorMessage.value),
-                  );
-                } else {
+                case RestaurantSearchResultStateData(
+                    restaurants: var restaurants
+                  ):
                   return ListView.builder(
-                      itemCount: controller.searchResult.length,
-                      itemBuilder: (context, index) {
-                        var restaurant = controller.searchResult[index];
-                        return SearchCard(
-                            onTap: () {
-                              print(restaurant.id);
-                              Get.toNamed(NavigationRoutes.detailRoute.name,
-                                  parameters: {
-                                    'id': restaurant.id,
-                                  });
-                            },
-                            restaurant: restaurant);
-                      });
-                }
-              },
-            ))
+                    itemCount: restaurants.length,
+                    itemBuilder: (context, index) {
+                      var restaurant = restaurants[index];
+                      return SearchCard(
+                        onTap: () {
+                          restaurantRecent.addRecent(restaurant);
+                          Navigator.pushNamed(
+                              context, NavigationRoutes.detailRoute.name,
+                              arguments: restaurant.id);
+                        },
+                        restaurant: restaurant,
+                      );
+                    },
+                  );
+                default:
+                  return const SizedBox();
+              }
+            }))
           ],
         ),
       ),

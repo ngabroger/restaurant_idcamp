@@ -1,8 +1,6 @@
+import 'package:find_restaurant/data/api/api_service.dart';
 import 'package:find_restaurant/data/model/restaurant.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import '../controllers/recent_restaurant_controller.dart';
 
 class RecentCard extends StatelessWidget {
   final Restaurant recents;
@@ -22,7 +20,6 @@ class RecentCard extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: Card(
-            color: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
@@ -102,7 +99,7 @@ class RecentCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Image.network(
-                  'https://restaurant-api.dicoding.dev/images/medium/${recents.pictureId}',
+                  ApiService.images + recents.pictureId,
                   width: 80,
                   height: 80,
                   fit: BoxFit.cover,

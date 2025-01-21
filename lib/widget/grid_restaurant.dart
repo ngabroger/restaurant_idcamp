@@ -1,3 +1,4 @@
+import 'package:find_restaurant/data/api/api_service.dart';
 import 'package:flutter/material.dart';
 
 import '../data/model/restaurant.dart';
@@ -29,7 +30,7 @@ class GridRestaurant extends StatelessWidget {
               Stack(
                 children: [
                   Image.network(
-                    'https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}',
+                    ApiService.images + restaurant.pictureId,
                     width: double.infinity,
                     height: 104,
                     fit: BoxFit.cover,
@@ -45,7 +46,7 @@ class GridRestaurant extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(4),
+                            padding: const EdgeInsets.all(8),
                             child: Row(
                               children: [
                                 Icon(
