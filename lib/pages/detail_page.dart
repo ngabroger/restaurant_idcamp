@@ -1,6 +1,6 @@
-import 'package:find_restaurant/controllers/favorite_provider.dart';
-import 'package:find_restaurant/controllers/restaurant_detail_provider.dart';
-import 'package:find_restaurant/controllers/restaurant_review_provider.dart';
+import 'package:find_restaurant/controllers/favorite_controller/favorite_provider.dart';
+import 'package:find_restaurant/controllers/restaurant_controller/restaurant_detail_provider.dart';
+import 'package:find_restaurant/controllers/restaurant_controller/restaurant_review_provider.dart';
 import 'package:find_restaurant/data/api/api_service.dart';
 import 'package:find_restaurant/static/restaurant_detail_result_state.dart';
 import 'package:flutter/material.dart';

@@ -7,6 +7,8 @@ import 'package:find_restaurant/pages/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'favorite_page.dart';
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -18,6 +20,7 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _pages = [
     HomePage(),
     SearchPage(),
+    FavoritePage(),
     SettingPage(),
   ];
   @override
@@ -38,6 +41,11 @@ class _MainPageState extends State<MainPage> {
                     Icons.search_outlined,
                   ),
                   label: 'Search'),
+              CurvedNavigationBarItem(
+                  child: Icon(
+                    Icons.favorite_border_outlined,
+                  ),
+                  label: 'Favorite'),
               CurvedNavigationBarItem(
                   child: Icon(
                     Icons.settings_outlined,

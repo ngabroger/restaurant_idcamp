@@ -1,12 +1,14 @@
 import 'package:find_restaurant/controllers/dark_theme_provider.dart';
-import 'package:find_restaurant/controllers/favorite_provider.dart';
+import 'package:find_restaurant/controllers/favorite_controller/favorite_provider.dart';
+import 'package:find_restaurant/controllers/favorite_controller/local_database_provider.dart';
 import 'package:find_restaurant/controllers/page_provider.dart';
-import 'package:find_restaurant/controllers/restaurant_detail_provider.dart';
-import 'package:find_restaurant/controllers/restaurant_list_provider.dart';
-import 'package:find_restaurant/controllers/restaurant_recent_provider.dart';
-import 'package:find_restaurant/controllers/restaurant_review_provider.dart';
-import 'package:find_restaurant/controllers/restaurant_search_provider.dart';
+import 'package:find_restaurant/controllers/restaurant_controller/restaurant_detail_provider.dart';
+import 'package:find_restaurant/controllers/restaurant_controller/restaurant_list_provider.dart';
+import 'package:find_restaurant/controllers/restaurant_controller/restaurant_recent_provider.dart';
+import 'package:find_restaurant/controllers/restaurant_controller/restaurant_review_provider.dart';
+import 'package:find_restaurant/controllers/restaurant_controller/restaurant_search_provider.dart';
 import 'package:find_restaurant/data/api/api_service.dart';
+import 'package:find_restaurant/data/local/local_database_service.dart';
 import 'package:find_restaurant/pages/detail_page.dart';
 import 'package:find_restaurant/static/navigation_routes.dart';
 import 'package:find_restaurant/style/theme/theme.dart';
@@ -20,6 +22,13 @@ void main() {
   runApp(MultiProvider(providers: [
     Provider(
       create: (context) => ApiService(),
+    ),
+    Provider(
+      create: (context) => LocalDatabaseService(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) =>
+          LocalDatabaseProvider(context.read<LocalDatabaseService>()),
     ),
     ChangeNotifierProvider(
       create: (context) => FavoriteProvider(),

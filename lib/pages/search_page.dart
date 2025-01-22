@@ -1,7 +1,7 @@
-import 'package:find_restaurant/controllers/restaurant_search_provider.dart';
+import 'package:find_restaurant/controllers/restaurant_controller/restaurant_search_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../controllers/restaurant_recent_provider.dart';
+import '../controllers/restaurant_controller/restaurant_recent_provider.dart';
 import '../static/navigation_routes.dart';
 import '../static/restaurant_search_result_state.dart';
 import '../widget/search_card.dart';
