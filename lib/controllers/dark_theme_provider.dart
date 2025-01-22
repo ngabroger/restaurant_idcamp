@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
-class DarkThemeProvider extends ChangeNotifier{
-
-  DarkThemeProvider(){
+class DarkThemeProvider extends ChangeNotifier {
+  DarkThemeProvider() {
     _loadFromPrefs();
   }
 
   bool _darkTheme = false;
   bool get darkTheme => _darkTheme;
 
-  void toogleTheme(){
+  void toogleTheme() {
     _darkTheme = !_darkTheme;
     _saveToPrefs();
     notifyListeners();

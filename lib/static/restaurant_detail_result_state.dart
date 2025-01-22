@@ -12,11 +12,8 @@ class RestaurantDetailResultStateData extends RestaurantDetailResultState {
   RestaurantDetailResultStateData(this.restaurant);
 }
 
-
 class RestaurantDetailResultStateError extends RestaurantDetailResultState {
   final String message;
 
   RestaurantDetailResultStateError(this.message);
 }
-
-

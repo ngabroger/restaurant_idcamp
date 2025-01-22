@@ -157,8 +157,10 @@ class _DetailPageState extends State<DetailPage> {
                               Card(
                                 elevation: 4,
                                 shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12))),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(12),
+                                  ),
+                                ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -316,17 +318,21 @@ class _DetailPageState extends State<DetailPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                review.name,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                              Expanded(
+                                                child: Text(
+                                                  review.name,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
                                               ),
                                               SizedBox(height: 4),
-                                              Text(review.review,
-                                                  maxLines: 3,
-                                                  overflow:
-                                                      TextOverflow.ellipsis),
+                                              Expanded(
+                                                child: Text(review.review,
+                                                    maxLines: 3,
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
+                                              ),
                                               SizedBox(height: 4),
                                               Text(
                                                 review.date,
