@@ -1,7 +1,7 @@
 import 'package:find_restaurant/static/restaurant_search_result_state.dart';
 import 'package:flutter/material.dart';
 
-import '../data/api/api_service.dart';
+import '../../data/api/api_service.dart';
 
 class RestaurantSearchProvider extends ChangeNotifier {
   final ApiService _apiService;
@@ -22,7 +22,7 @@ class RestaurantSearchProvider extends ChangeNotifier {
       } else {
         _state = RestaurantSearchResultStateData(result.restaurants);
       }
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       _state = RestaurantSearchResultStateError("No Internet Connection");
     } finally {
       notifyListeners();

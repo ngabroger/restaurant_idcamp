@@ -1,13 +1,15 @@
-// ignore_for_file: use_build_context_synchronously
-
-import 'package:find_restaurant/controllers/restaurant_detail_provider.dart';
-import 'package:find_restaurant/controllers/restaurant_review_provider.dart';
+import 'package:find_restaurant/controllers/favorite_controller/favorite_provider.dart';
+import 'package:find_restaurant/controllers/favorite_controller/local_database_provider.dart';
+import 'package:find_restaurant/controllers/restaurant_controller/restaurant_detail_provider.dart';
+import 'package:find_restaurant/controllers/restaurant_controller/restaurant_review_provider.dart';
 import 'package:find_restaurant/data/api/api_service.dart';
+import 'package:find_restaurant/data/model/restaurant.dart';
 import 'package:find_restaurant/static/restaurant_detail_result_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import '../widget/circle_button.dart';
+import 'widget/favorite_button.dart';
 
 class DetailPage extends StatefulWidget {
   final String restaurantId;
@@ -37,6 +39,8 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     final TextEditingController nameController = TextEditingController();
     final TextEditingController reviewController = TextEditingController();
+    final RestaurantDetailProvider detailController =
+        context.read<RestaurantDetailProvider>();
     final RestaurantReviewProvider controller =
         context.read<RestaurantReviewProvider>();
     return Scaffold(
@@ -55,7 +59,7 @@ class _DetailPageState extends State<DetailPage> {
                 return SingleChildScrollView(
                   child: Stack(
                     children: [
-                      Container(
+                      SizedBox(
                         width: double.infinity,
                         child: Stack(
                           children: [
@@ -78,18 +82,28 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                     onTap: () => Navigator.pop(context),
                                   ),
-                                  CircleButton(
-                                    iconImage: Icon(
-                                      isFavorite
-                                          ? Icons.favorite_border
-                                          : Icons.favorite,
-                                      color: Colors.grey[700],
+                                  ChangeNotifierProvider(
+                                    create: (context) => FavoriteProvider(),
+                                    child: Consumer<RestaurantDetailProvider>(
+                                      builder: (context, value, child) {
+                                        switch (value.state) {
+                                          case RestaurantDetailResultStateData(
+                                              restaurant: var rest
+                                            ):
+                                            return FavoriteButton(
+                                                restaurant: Restaurant(
+                                                    id: rest.id,
+                                                    name: rest.name,
+                                                    description:
+                                                        rest.description,
+                                                    pictureId: rest.pictureId,
+                                                    city: rest.city,
+                                                    rating: rest.rating));
+                                          default:
+                                            return const SizedBox();
+                                        }
+                                      },
                                     ),
-                                    onTap: () {
-                                      setState(() {
-                                        isFavorite = !isFavorite;
-                                      });
-                                    },
                                   )
                                 ],
                               ),
@@ -153,8 +167,10 @@ class _DetailPageState extends State<DetailPage> {
                               Card(
                                 elevation: 4,
                                 shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12))),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(12),
+                                  ),
+                                ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -312,14 +328,21 @@ class _DetailPageState extends State<DetailPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                review.name,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                              Expanded(
+                                                child: Text(
+                                                  review.name,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
                                               ),
                                               SizedBox(height: 4),
-                                              Text(review.review),
+                                              Expanded(
+                                                child: Text(review.review,
+                                                    maxLines: 3,
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
+                                              ),
                                               SizedBox(height: 4),
                                               Text(
                                                 review.date,
@@ -387,6 +410,8 @@ class _DetailPageState extends State<DetailPage> {
                                 .addReview(widget.restaurantId,
                                     nameController.text, reviewController.text)
                                 .then((_) {
+                              detailController
+                                  .fetchDetailRestaurant(widget.restaurantId);
                               Navigator.pop(context);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

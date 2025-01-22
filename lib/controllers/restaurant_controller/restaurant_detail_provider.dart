@@ -22,8 +22,8 @@ class RestaurantDetailProvider extends ChangeNotifier {
         _state = RestaurantDetailResultStateData(result.restaurant);
         notifyListeners();
       }
-    } on Exception catch (e) {
-      _state = RestaurantDetailResultStateError(e.toString());
+    } on Exception catch (_) {
+      _state = RestaurantDetailResultStateError("No Internet Connection");
       notifyListeners();
     }
   }

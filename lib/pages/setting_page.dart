@@ -2,7 +2,6 @@ import 'package:find_restaurant/controllers/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:provider/provider.dart';
-import 'package:switcher_button/switcher_button.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -14,8 +13,6 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
-    final DarkThemeProvider darkThemeProvider =
-        context.read<DarkThemeProvider>();
     return Scaffold(
       body: SafeArea(
           child: Padding(
@@ -43,10 +40,14 @@ class _SettingPageState extends State<SettingPage> {
                   "Dark Mode",
                 ),
                 Spacer(),
-                SwitcherButton(
-                  value: darkThemeProvider.darkTheme,
-                  onChange: (value) {
-                    darkThemeProvider.toogleTheme();
+                Consumer<DarkThemeProvider>(
+                  builder: (context, darkThemeProvider, child) {
+                    return Switch(
+                      value: darkThemeProvider.darkTheme,
+                      onChanged: (value) {
+                        darkThemeProvider.toogleTheme(value);
+                      },
+                    );
                   },
                 ),
               ],
