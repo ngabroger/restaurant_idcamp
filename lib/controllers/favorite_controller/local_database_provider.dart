@@ -25,23 +25,26 @@ class LocalDatabaseProvider extends ChangeNotifier {
         _message = 'Failed to add favorite';
       } else {
         _message = 'Success to add favorite';
+        await loadAllFavorite();
       }
-    } catch (e) {
-      _message = e.toString();
+    } catch (_) {
+      _message = 'Failed to add favorite';
     }
     notifyListeners();
   }
 
   Future<void> loadAllFavorite() async {
     try {
-      await _service.getRestaurants();
+      final result = await _service.getRestaurants();
+      _restaurantList = result;
       _restaurant = null;
       _message = "All of your data is Loaded";
       notifyListeners();
-    } catch (e) {
-      _message = e.toString();
+    } catch (_) {
+      _message = "Failed to load data";
       notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<void> loadRestaurantById(String id) async {
@@ -50,8 +53,9 @@ class LocalDatabaseProvider extends ChangeNotifier {
       _restaurant = result;
       _message = "Your data is Loaded";
       notifyListeners();
-    } catch (e) {
-      _message = e.toString();
+    } catch (_) {
+      _message = "Failed to load data";
+
       notifyListeners();
     }
   }
@@ -60,11 +64,14 @@ class LocalDatabaseProvider extends ChangeNotifier {
     try {
       await _service.deleteRestaurant(id);
       _message = "Success to remove favorite";
+      await loadAllFavorite();
       notifyListeners();
-    } catch (e) {
-      _message = e.toString();
+    } catch (_) {
+      _message = "Failed to remove favorite";
+      await loadAllFavorite();
       notifyListeners();
     }
+    notifyListeners();
   }
 
   bool checkRestaurantFavorite(String id) {

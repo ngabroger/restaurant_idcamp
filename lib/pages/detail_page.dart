@@ -1,12 +1,15 @@
 import 'package:find_restaurant/controllers/favorite_controller/favorite_provider.dart';
+import 'package:find_restaurant/controllers/favorite_controller/local_database_provider.dart';
 import 'package:find_restaurant/controllers/restaurant_controller/restaurant_detail_provider.dart';
 import 'package:find_restaurant/controllers/restaurant_controller/restaurant_review_provider.dart';
 import 'package:find_restaurant/data/api/api_service.dart';
+import 'package:find_restaurant/data/model/restaurant.dart';
 import 'package:find_restaurant/static/restaurant_detail_result_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import '../widget/circle_button.dart';
+import 'widget/favorite_button.dart';
 
 class DetailPage extends StatefulWidget {
   final String restaurantId;
@@ -79,21 +82,28 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                     onTap: () => Navigator.pop(context),
                                   ),
-                                  Consumer<FavoriteProvider>(
-                                    builder: (context, value, child) {
-                                      isFavorite = value.isFavorite;
-                                      return CircleButton(
-                                        iconImage: Icon(
-                                          isFavorite
-                                              ? Icons.favorite_border
-                                              : Icons.favorite,
-                                          color: Colors.grey[700],
-                                        ),
-                                        onTap: () {
-                                          value.setFavorite(!isFavorite);
-                                        },
-                                      );
-                                    },
+                                  ChangeNotifierProvider(
+                                    create: (context) => FavoriteProvider(),
+                                    child: Consumer<RestaurantDetailProvider>(
+                                      builder: (context, value, child) {
+                                        switch (value.state) {
+                                          case RestaurantDetailResultStateData(
+                                              restaurant: var rest
+                                            ):
+                                            return FavoriteButton(
+                                                restaurant: Restaurant(
+                                                    id: rest.id,
+                                                    name: rest.name,
+                                                    description:
+                                                        rest.description,
+                                                    pictureId: rest.pictureId,
+                                                    city: rest.city,
+                                                    rating: rest.rating));
+                                          default:
+                                            return const SizedBox();
+                                        }
+                                      },
+                                    ),
                                   )
                                 ],
                               ),

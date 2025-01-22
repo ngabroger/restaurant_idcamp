@@ -1,4 +1,5 @@
 import 'package:find_restaurant/controllers/favorite_controller/local_database_provider.dart';
+import 'package:find_restaurant/static/navigation_routes.dart';
 import 'package:find_restaurant/widget/search_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
@@ -14,10 +15,10 @@ class FavoritePage extends StatefulWidget {
 class _FavoritePageState extends State<FavoritePage> {
   @override
   void initState() {
-    Future.microtask(() {
-      context.read<LocalDatabaseProvider>().loadAllFavorite();
-    });
     super.initState();
+
+    Future.microtask(
+        () => context.read<LocalDatabaseProvider>().loadAllFavorite());
   }
 
   @override
@@ -54,7 +55,13 @@ class _FavoritePageState extends State<FavoritePage> {
                   itemCount: favoriteList.length,
                   itemBuilder: (context, index) {
                     final restaurant = favoriteList[index];
-                    return SearchCard(onTap: () {}, restaurant: restaurant);
+                    return SearchCard(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, NavigationRoutes.detailRoute.name,
+                              arguments: restaurant.id);
+                        },
+                        restaurant: restaurant);
                   });
             },
           ))
