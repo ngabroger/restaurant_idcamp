@@ -1,12 +1,15 @@
 import 'package:find_restaurant/data/preferences/setting_preference.dart';
 import 'package:flutter/material.dart';
 
-class DarkThemeProvider extends ChangeNotifier {
+class SettingProvider extends ChangeNotifier {
   SettingPreference settingPreference;
 
-  DarkThemeProvider({required this.settingPreference}) {
+  SettingProvider({required this.settingPreference}) {
     _loadFromPrefs();
   }
+
+  bool _notification = false;
+  bool get notification => _notification;
 
   bool _darkTheme = false;
   bool get darkTheme => _darkTheme;
@@ -19,6 +22,14 @@ class DarkThemeProvider extends ChangeNotifier {
 
   void _loadFromPrefs() async {
     _darkTheme = await settingPreference.isDarkMode();
+    notifyListeners();
+    _notification = await settingPreference.isNotificationActive();
+    notifyListeners();
+  }
+
+  void toogleNotification(bool value) {
+    _notification = value;
+    settingPreference.setNotificationActive(value);
     notifyListeners();
   }
 

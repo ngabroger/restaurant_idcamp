@@ -1,4 +1,4 @@
-import 'package:find_restaurant/controllers/dark_theme_provider.dart';
+import 'package:find_restaurant/controllers/setting_provider.dart';
 import 'package:find_restaurant/controllers/favorite_controller/favorite_provider.dart';
 import 'package:find_restaurant/controllers/favorite_controller/local_database_provider.dart';
 import 'package:find_restaurant/controllers/page_provider.dart';
@@ -44,8 +44,8 @@ void main() async {
       create: (context) => PageProvider(),
     ),
     ChangeNotifierProvider(
-      create: (context) => DarkThemeProvider(
-          settingPreference: context.read<SettingPreference>()),
+      create: (context) =>
+          SettingProvider(settingPreference: context.read<SettingPreference>()),
     ),
     ChangeNotifierProvider(
       create: (context) => RestaurantRecentProvider(),
@@ -71,12 +71,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = createTextTheme(context, "Ubuntu", "Ubuntu");
-    final DarkThemeProvider darkThemeProvider =
-        context.watch<DarkThemeProvider>();
+    final SettingProvider darkThemeProvider = context.watch<SettingProvider>();
     final materialTheme = MaterialTheme(textTheme);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Find Restaurant',
       theme: darkThemeProvider.darkTheme
           ? materialTheme.dark()
           : materialTheme.light(),
