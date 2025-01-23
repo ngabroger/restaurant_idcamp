@@ -63,13 +63,13 @@ class _SettingPageState extends State<SettingPage> {
                     return Switch(
                       value: notification.notification,
                       onChanged: (value) {
-                        notification.toogleNotification(value);
+                        notification.toggleNotification(value);
                       },
                     );
                   },
                 ),
               ],
-            )
+            ),
           ],
         ),
       )),
