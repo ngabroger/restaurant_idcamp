@@ -33,15 +33,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
 
-  final NotificationHelper _notificationHelper = NotificationHelper();
-  final BackgroundService _backgroundService = BackgroundService();
+  final NotificationHelper notificationHelper = NotificationHelper();
+  final BackgroundService backgroundService = BackgroundService();
 
   if (Platform.isAndroid) {
     await AndroidAlarmManager.initialize();
   }
 
-  _backgroundService.initializeIsolate();
-  await _notificationHelper.initNotifications(flutterLocalNotificationsPlugin);
+  backgroundService.initializeIsolate();
+  await notificationHelper.initNotifications(flutterLocalNotificationsPlugin);
 
   runApp(MultiProvider(providers: [
     Provider(

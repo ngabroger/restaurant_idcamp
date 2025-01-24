@@ -1,9 +1,7 @@
 import 'package:find_restaurant/controllers/schedule_controller.dart';
 import 'package:find_restaurant/data/preferences/setting_preference.dart';
-import 'package:find_restaurant/main.dart';
 import 'package:find_restaurant/utils/notification_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class SettingProvider extends ChangeNotifier {
   final NotificationHelper _notificationHelper = NotificationHelper();

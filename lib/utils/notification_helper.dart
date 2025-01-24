@@ -31,9 +31,7 @@ class NotificationHelper {
         onDidReceiveNotificationResponse:
             (NotificationResponse notificationResponse) async {
       final String? payload = notificationResponse.payload;
-      if (payload != null) {
-        print('notification payload: ' + payload);
-      }
+      if (payload != null) {}
       selectNotificationSubject.add(payload ?? 'empty payload');
     });
   }
@@ -41,9 +39,9 @@ class NotificationHelper {
   Future<void> showNotification(
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
       RestaurantListResponse restaurants) async {
-    var _channelId = "1";
-    var _channelName = "channel_01";
-    var _channelDescription = "Restaurant Channel";
+    var channelId = "1";
+    var channelName = "channel_01";
+    var channelDescription = "Restaurant Channel";
 
     Random random = Random();
     int randomNum = random.nextInt(restaurants.restaurants.length - 1);
@@ -59,9 +57,9 @@ class NotificationHelper {
     );
 
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      _channelId,
-      _channelName,
-      channelDescription: _channelDescription,
+      channelId,
+      channelName,
+      channelDescription: channelDescription,
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',

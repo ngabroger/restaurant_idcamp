@@ -4,6 +4,7 @@ import 'package:find_restaurant/controllers/restaurant_controller/restaurant_rev
 import 'package:find_restaurant/data/api/api_service.dart';
 import 'package:find_restaurant/data/model/restaurant.dart';
 import 'package:find_restaurant/static/restaurant_detail_result_state.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
@@ -79,10 +80,15 @@ class _DetailPageState extends State<DetailPage> {
                           width: double.infinity,
                           child: Stack(
                             children: [
+                              // DIBAGIAN SINI UNTUK WIDGET TEST WAJIB TIDAK BOLEH ADA IMAGE NETWORK
                               Hero(
                                 tag: restaurant.pictureId,
-                                child: Image.network(
-                                    ApiService.images + restaurant.pictureId),
+                                child: kIsWeb
+                                    ? Icon(Icons.image)
+                                    : Image.network(
+                                        ApiService.images +
+                                            restaurant.pictureId,
+                                      ),
                               ),
                               Positioned(
                                   child: Padding(

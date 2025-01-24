@@ -21,7 +21,7 @@ class _SettingPageState extends State<SettingPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Setting',
+              'Setting User',
               style: Theme.of(context).textTheme.headlineLarge,
             ),
             Padding(
