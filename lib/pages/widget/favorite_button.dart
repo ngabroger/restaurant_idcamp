@@ -1,4 +1,3 @@
-import 'package:find_restaurant/data/model/detail_restaurant.dart';
 import 'package:find_restaurant/data/model/restaurant.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +21,7 @@ class FavoriteButton extends StatefulWidget {
 class _FavoriteButtonState extends State<FavoriteButton> {
   @override
   void initState() {
+    super.initState();
     final favoriteProvider = context.read<FavoriteProvider>();
     final localDatabaseProvider = context.read<LocalDatabaseProvider>();
 

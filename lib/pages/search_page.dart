@@ -10,7 +10,7 @@ class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
   @override
-  _SearchPageState createState() => _SearchPageState();
+  State createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
@@ -18,7 +18,9 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      context.read<RestaurantSearchProvider>().fetchSearchRestaurant("");
+      if (mounted) {
+        context.read<RestaurantSearchProvider>().fetchSearchRestaurant("");
+      }
     });
   }
 
@@ -28,60 +30,65 @@ class _SearchPageState extends State<SearchPage> {
     final searchRestaurant = context.read<RestaurantSearchProvider>();
     final restaurantRecent = context.read<RestaurantRecentProvider>();
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                labelText: 'Search',
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    searchRestaurant
-                        .fetchSearchRestaurant(searchController.text);
-                  },
-                  icon: Icon(Icons.search),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await searchRestaurant.fetchSearchRestaurant(searchController.text);
+        },
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                  labelText: 'Search',
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      searchRestaurant
+                          .fetchSearchRestaurant(searchController.text);
+                    },
+                    icon: Icon(Icons.search),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Expanded(child: Consumer<RestaurantSearchProvider>(
-                builder: (context, value, child) {
-              switch (value.state) {
-                case RestaurantSearchResultStateError(message: var message):
-                  return Center(
-                    child: Text(message),
-                  );
-                case RestaurantSearchResultStateLoading _:
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                case RestaurantSearchResultStateData(
-                    restaurants: var restaurants
-                  ):
-                  return ListView.builder(
-                    itemCount: restaurants.length,
-                    itemBuilder: (context, index) {
-                      var restaurant = restaurants[index];
-                      return SearchCard(
-                        onTap: () {
-                          restaurantRecent.addRecent(restaurant);
-                          Navigator.pushNamed(
-                              context, NavigationRoutes.detailRoute.name,
-                              arguments: restaurant.id);
-                        },
-                        restaurant: restaurant,
-                      );
-                    },
-                  );
-                default:
-                  return const SizedBox();
-              }
-            }))
-          ],
+              SizedBox(
+                height: 16,
+              ),
+              Expanded(child: Consumer<RestaurantSearchProvider>(
+                  builder: (context, value, child) {
+                switch (value.state) {
+                  case RestaurantSearchResultStateError(message: var message):
+                    return Center(
+                      child: Text(message),
+                    );
+                  case RestaurantSearchResultStateLoading _:
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  case RestaurantSearchResultStateData(
+                      restaurants: var restaurants
+                    ):
+                    return ListView.builder(
+                      itemCount: restaurants.length,
+                      itemBuilder: (context, index) {
+                        var restaurant = restaurants[index];
+                        return SearchCard(
+                          onTap: () {
+                            restaurantRecent.addRecent(restaurant);
+                            Navigator.pushNamed(
+                                context, NavigationRoutes.detailRoute.name,
+                                arguments: restaurant.id);
+                          },
+                          restaurant: restaurant,
+                        );
+                      },
+                    );
+                  default:
+                    return const SizedBox();
+                }
+              }))
+            ],
+          ),
         ),
       ),
     );
