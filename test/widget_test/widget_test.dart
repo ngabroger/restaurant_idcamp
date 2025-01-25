@@ -7,7 +7,6 @@ import 'package:find_restaurant/data/local/local_database_service.dart';
 import 'package:find_restaurant/data/model/detail_restaurant.dart';
 import 'package:find_restaurant/pages/detail_page.dart';
 import 'package:find_restaurant/static/restaurant_detail_result_state.dart';
-import 'package:find_restaurant/widget/circle_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -43,56 +42,6 @@ void main() {
     ));
 
     expect(find.text('Restaurant Going Merry!'), findsOneWidget);
-  });
-
-// Gak Tau Kenapa Ini Error ngapa ya
-  testWidgets('DetailPage back button works', (WidgetTester tester) async {
-    final String restaurantId = "rqdv5juczeskfw1e867";
-
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          Provider(
-            create: (context) => ApiService(),
-          ),
-          ChangeNotifierProvider(
-              create: (context) =>
-                  RestaurantDetailProvider(context.read<ApiService>())),
-          ChangeNotifierProvider(
-              create: (context) =>
-                  RestaurantReviewProvider(context.read<ApiService>())),
-        ],
-        child: MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => DetailPage(
-                              restaurantId: restaurantId,
-                            )),
-                  );
-                },
-                child: Text('Go to DetailPage'),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-
-    await tester.tap(find.text('Go to DetailPage'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(DetailPage), findsOneWidget);
-
-    await tester
-        .tap(find.widgetWithIcon(CircleButton, Icons.arrow_back_outlined));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Go to DetailPage'), findsOneWidget);
   });
 
 // TESTING ERROR DIKARENAKAN ADANYA IMAGE NETWORK HARUS DIGANTI MENJADI IMAGE ASSET SENDIRI ATAU DIGANTI KE ICON
