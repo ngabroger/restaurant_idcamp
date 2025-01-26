@@ -1,5 +1,6 @@
 import 'dart:isolate';
 import 'dart:ui';
+import 'package:workmanager/workmanager.dart';
 
 import '../data/api/api_service.dart';
 import '../main.dart';
@@ -24,6 +25,7 @@ class BackgroundService {
       port.sendPort,
       _isolateName,
     );
+    Workmanager().initialize(callbackDispatcher);
   }
 
   static Future<void> callback() async {
@@ -37,4 +39,19 @@ class BackgroundService {
   }
 
   Future<void> someTask() async {}
+
+  void scheduleDailyReminder() {
+    Workmanager().registerPeriodicTask(
+      "1",
+      "simplePeriodicTask",
+      frequency: Duration(hours: 24),
+    );
+  }
+}
+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    await BackgroundService.callback();
+    return Future.value(true);
+  });
 }

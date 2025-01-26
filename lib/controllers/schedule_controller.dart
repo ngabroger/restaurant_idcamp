@@ -1,6 +1,5 @@
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:workmanager/workmanager.dart';
 import 'package:find_restaurant/utils/background_service.dart';
-import 'package:find_restaurant/utils/date_time_helper.dart';
 import 'package:flutter/material.dart';
 
 class ScheduleController extends ChangeNotifier {
@@ -12,12 +11,10 @@ class ScheduleController extends ChangeNotifier {
     notifyListeners();
     if (_isSelected) {
       notifyListeners();
-      await AndroidAlarmManager.periodic(
-          const Duration(hours: 24), 1, BackgroundService.callback,
-          startAt: DateTimeHelper.format(), exact: true, wakeup: true);
+      BackgroundService().scheduleDailyReminder();
     } else {
       notifyListeners();
-      await AndroidAlarmManager.cancel(1);
+      await Workmanager().cancelAll();
     }
   }
 }
