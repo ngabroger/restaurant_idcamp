@@ -80,15 +80,13 @@ class _DetailPageState extends State<DetailPage> {
                           width: double.infinity,
                           child: Stack(
                             children: [
-                              // DIBAGIAN SINI UNTUK WIDGET TEST WAJIB TIDAK BOLEH ADA IMAGE NETWORK
                               Hero(
                                 tag: restaurant.pictureId,
-                                child: kIsWeb
-                                    ? Icon(Icons.image)
-                                    : Image.network(
-                                        ApiService.images +
-                                            restaurant.pictureId,
-                                      ),
+                                child: Image.network(
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(Icons.error),
+                                  ApiService.images + restaurant.pictureId,
+                                ),
                               ),
                               Positioned(
                                   child: Padding(
