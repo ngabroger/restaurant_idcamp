@@ -44,7 +44,6 @@ void main() {
     expect(find.text('Restaurant Going Merry!'), findsOneWidget);
   });
 
-// TESTING ERROR DIKARENAKAN ADANYA IMAGE NETWORK HARUS DIGANTI MENJADI IMAGE ASSET SENDIRI ATAU DIGANTI KE ICON
   testWidgets('DetailPage displays customer reviews',
       (WidgetTester tester) async {
     final String restaurantId = "rqdv5juczeskfw1e867";

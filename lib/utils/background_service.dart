@@ -1,5 +1,6 @@
 import 'dart:isolate';
 import 'dart:ui';
+import 'package:find_restaurant/utils/date_time_helper.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '../data/api/api_service.dart';
@@ -39,12 +40,12 @@ class BackgroundService {
   }
 
   Future<void> someTask() async {}
-
+  final initialDelay = DateTimeHelper.format().difference(DateTime.now());
   void scheduleDailyReminder() {
     Workmanager().registerPeriodicTask(
       "1",
       "simplePeriodicTask",
-      frequency: Duration(hours: 24),
+      frequency: initialDelay,
     );
   }
 }
