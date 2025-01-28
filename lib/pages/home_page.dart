@@ -5,6 +5,7 @@ import 'package:find_restaurant/static/restaurant_list_result_state.dart';
 import 'package:find_restaurant/widget/recent_card_restaurant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../widget/favorite_card.dart';
@@ -111,15 +112,40 @@ class _HomePageState extends State<HomePage> {
                 final recent = value.recentRestaurant;
                 if (recent == null) {
                   return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Center(
-                      child: Text(
-                        "Find Your Favorite Restaurant",
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  );
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 200,
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  child: Lottie.asset('assets/food-drink.json',
+                                      fit: BoxFit.fill),
+                                ),
+                              ),
+                              Center(
+                                child: Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.5),
+                                      borderRadius:
+                                          BorderRadius.circular(16.0)),
+                                  child: Text(
+                                    "Hello Restaurant!",
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ));
                 } else {
                   return Column(
                     spacing: 8.0,

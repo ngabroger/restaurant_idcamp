@@ -1,6 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../controllers/setting_provider.dart';
 
 class CircleButton extends StatelessWidget {
   final Icon iconImage;
@@ -14,6 +17,7 @@ class CircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SettingProvider darkTheme = Provider.of<SettingProvider>(context);
     return ClipRRect(
       borderRadius: BorderRadius.circular(24.0),
       child: Container(
@@ -25,7 +29,7 @@ class CircleButton extends StatelessWidget {
             onPressed: onTap,
             iconSize: 24,
             icon: iconImage,
-            color: Colors.black,
+            color: darkTheme.darkTheme ? Colors.white : Colors.black,
           ),
         ),
       ),
