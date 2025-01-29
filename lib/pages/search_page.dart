@@ -1,5 +1,6 @@
 import 'package:find_restaurant/controllers/restaurant_controller/restaurant_search_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../controllers/restaurant_controller/restaurant_recent_provider.dart';
 import '../static/navigation_routes.dart';
@@ -59,11 +60,13 @@ class _SearchPageState extends State<SearchPage> {
                 switch (value.state) {
                   case RestaurantSearchResultStateError(message: var message):
                     return Center(
-                      child: Text(message),
+                      child: Lottie.asset('assets/notfound.json',
+                          height: 150, width: 150),
                     );
                   case RestaurantSearchResultStateLoading _:
                     return Center(
-                      child: CircularProgressIndicator(),
+                      child: Lottie.asset('assets/loading.json',
+                          height: 150, width: 150),
                     );
                   case RestaurantSearchResultStateData(
                       restaurants: var restaurants

@@ -3,6 +3,7 @@ import 'package:find_restaurant/static/navigation_routes.dart';
 import 'package:find_restaurant/widget/search_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class FavoritePage extends StatefulWidget {
@@ -50,7 +51,8 @@ class _FavoritePageState extends State<FavoritePage> {
 
             if (favoriteList.isEmpty) {
               return Center(
-                child: Text('No favorite restaurant'),
+                child: Lottie.asset('assets/notfound.json',
+                    width: 150, height: 150),
               );
             }
             return ListView.builder(

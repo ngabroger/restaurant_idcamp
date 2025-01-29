@@ -1,10 +1,10 @@
 import 'package:find_restaurant/controllers/favorite_controller/favorite_provider.dart';
 import 'package:find_restaurant/controllers/restaurant_controller/restaurant_detail_provider.dart';
 import 'package:find_restaurant/controllers/restaurant_controller/restaurant_review_provider.dart';
+import 'package:find_restaurant/controllers/setting_provider.dart';
 import 'package:find_restaurant/data/api/api_service.dart';
 import 'package:find_restaurant/data/model/restaurant.dart';
 import 'package:find_restaurant/static/restaurant_detail_result_state.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
@@ -54,6 +54,7 @@ class _DetailPageState extends State<DetailPage> {
         context.read<RestaurantDetailProvider>();
     final RestaurantReviewProvider controller =
         context.read<RestaurantReviewProvider>();
+    final SettingProvider darkTheme = context.read<SettingProvider>();
     return Scaffold(
         body: RefreshIndicator(
           onRefresh: () async {
@@ -132,6 +133,9 @@ class _DetailPageState extends State<DetailPage> {
                           ),
                         ),
                         Card(
+                          color: darkTheme.darkTheme
+                              ? Colors.grey[900]
+                              : Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(20),
@@ -177,6 +181,7 @@ class _DetailPageState extends State<DetailPage> {
                                 SizedBox(height: 8),
                                 ReadMoreText(
                                   restaurant.description,
+                                  textAlign: TextAlign.justify,
                                   trimLines: 2,
                                   colorClickableText: Colors.blue,
                                   trimMode: TrimMode.Line,
@@ -366,6 +371,8 @@ class _DetailPageState extends State<DetailPage> {
                                                 Expanded(
                                                   child: Text(review.review,
                                                       maxLines: 3,
+                                                      textAlign:
+                                                          TextAlign.justify,
                                                       overflow: TextOverflow
                                                           .ellipsis),
                                                 ),
